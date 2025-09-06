@@ -12,13 +12,5 @@ namespace Data
         {
             Words = words;
         }
-
-        public static LevelData Test => new LevelData(new List<Word>()
-        {
-            new Word("ПРИМЕР", 2, 2, 2),
-            new Word("РАБОТА", 3, 3),
-            new Word("ПРАВЫЙ", 2, 2, 2),
-            new Word("КАЛОША", 2, 4),
-        });
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Data
 {
@@ -9,9 +10,10 @@ namespace Data
         public readonly string Value;
         public readonly IReadOnlyList<string> Clusters;
 
-        public Word(string word, List<string> clusters = null)
+        [JsonConstructor]
+        public Word(string value, List<string> clusters = null)
         {
-            Value = word.ToUpper();
+            Value = value.ToUpper();
             Clusters = clusters ?? CreateRandomClusters(Value);
         }
 
