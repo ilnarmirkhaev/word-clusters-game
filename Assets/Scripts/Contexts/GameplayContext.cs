@@ -1,4 +1,5 @@
 ﻿using Gameplay;
+using UI.Views;
 using VContainer;
 using VContainer.Unity;
 
@@ -10,8 +11,10 @@ namespace Contexts
         {
             base.Configure(builder);
 
-            builder.RegisterEntryPoint<LevelController>();
+            builder.RegisterEntryPoint<LevelController>().AsSelf();
             builder.Register<LevelDataProvider>(Lifetime.Singleton);
+
+            builder.RegisterComponentInHierarchy<ClusterDragHandler>();
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Data
         public readonly string Value;
         public readonly IReadOnlyList<string> Clusters;
 
+        [JsonIgnore] public int Length => Value.Length;
+
         [JsonConstructor]
         public Word(string value, List<string> clusters = null)
         {
