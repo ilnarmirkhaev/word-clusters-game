@@ -4,14 +4,11 @@ using UnityEngine;
 
 namespace UI.Views
 {
-    public class ClusterView : MonoBehaviour
+    public class ClusterView : CachedMonoBehaviour
     {
         [SerializeField] private List<LetterCellView> _letterViews;
 
         protected Cluster Cluster;
-
-        private Transform _transform;
-        public Transform Transform => _transform ??= transform;
 
         public void Setup(Cluster cluster)
         {
@@ -29,6 +26,34 @@ namespace UI.Views
                 }
 
                 index++;
+            }
+        }
+
+        public int GetLetterIndexClosestToPoint(Vector2 point)
+        {
+            var minIndex = 0;
+            var minDelta = DistanceToPoint(minIndex);
+
+            for (var i = 1; i < Cluster.Length; i++)
+            {
+                var distance = DistanceToPoint(i);
+                if (distance < minDelta)
+                {
+                    minIndex = i;
+                    minDelta = distance;
+                }
+                else // дистанция начинает расти, значит меньше уже не будет
+                {
+                    return minIndex;
+                }
+            }
+
+            return minIndex;
+
+            float DistanceToPoint(int letterIndex)
+            {
+                var view = _letterViews[letterIndex];
+                return Vector2.Distance(point, view.Transform.position);
             }
         }
     }

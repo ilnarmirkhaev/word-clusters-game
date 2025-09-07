@@ -9,11 +9,13 @@ namespace UI.Views
         [Inject] private ClusterDragHandler _dragHandler;
 
         private Vector2 _dragStartPosition;
+        private Vector2 _grabOffset;
         private bool _isDragging;
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             _dragStartPosition = eventData.position;
+            _grabOffset = eventData.position - (Vector2)Transform.position;
             _isDragging = false;
         }
 
@@ -40,7 +42,7 @@ namespace UI.Views
         {
             _isDragging = true;
 
-            _dragHandler.BeginDrag(eventData, Cluster);
+            _dragHandler.BeginDrag(eventData, Cluster, _grabOffset);
         }
 
         public void OnEndDrag(PointerEventData eventData)

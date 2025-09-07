@@ -11,17 +11,19 @@ namespace UI.Views
         [SerializeField] private ScrollRect _clustersScroll;
 
         private Cluster _cluster;
+        private Vector2 _grabOffset;
 
         private void Start()
         {
-            _fakeCluster.gameObject.SetActive(false);
+            _fakeCluster.GameObject.SetActive(false);
         }
 
-        public void BeginDrag(PointerEventData eventData, Cluster cluster)
+        public void BeginDrag(PointerEventData eventData, Cluster cluster, Vector2 grabOffset = default)
         {
             _cluster = cluster;
+            _grabOffset = grabOffset;
             _fakeCluster.Setup(cluster);
-            _fakeCluster.gameObject.SetActive(true);
+            _fakeCluster.GameObject.SetActive(true);
             _clustersScroll.enabled = false;
 
             Drag(eventData);
@@ -29,12 +31,13 @@ namespace UI.Views
 
         public void Drag(PointerEventData eventData)
         {
-            _fakeCluster.Transform.position = eventData.position;
+            _fakeCluster.Transform.position = eventData.position - _grabOffset;
         }
 
         public bool TryEndDrag(PointerEventData eventData, out Vector2 newPosition)
         {
-            _fakeCluster.gameObject.SetActive(false);
+            var letterIndexUnderPointer = _fakeCluster.GetLetterIndexClosestToPoint(eventData.position);
+            _fakeCluster.GameObject.SetActive(false);
             newPosition = eventData.position;
             _clustersScroll.enabled = true;
             return true;

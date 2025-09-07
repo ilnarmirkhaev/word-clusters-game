@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UI.Views
 {
-    public class LetterCellView : MonoBehaviour
+    public class LetterCellView : CachedMonoBehaviour
     {
         [SerializeField] private TMP_Text _letter;
 
