@@ -29,11 +29,6 @@ namespace Gameplay
 
         private LevelState CreateLevelState(LevelData levelData)
         {
-            if (levelData.Words.Any(word => word.Length != levelData.Words[0].Length))
-            {
-                throw new ArgumentException("Words in LevelData must have the same length");
-            }
-
             var wordCount = levelData.Words.Count;
             var wordLength = levelData.Words[0].Length;
             var clusters = levelData.Words.SelectMany(word => word.Clusters).ToList();
