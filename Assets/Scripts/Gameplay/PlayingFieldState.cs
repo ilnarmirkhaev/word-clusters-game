@@ -1,14 +1,17 @@
-﻿namespace Gameplay
+﻿using System.Collections.Generic;
+
+namespace Gameplay
 {
     public interface IPlayingField
     {
         bool TryPlaceCluster(Cluster cluster, int row, int column);
         void RemoveCluster(Cluster cluster);
     }
-    
+
     public partial class PlayingFieldState : IPlayingField
     {
         private readonly ClusterRow[] _rows;
+        private readonly Dictionary<Cluster, ClusterPosition> _usedClusters = new();
 
         public PlayingFieldState(int wordCount, int wordLength)
         {
@@ -25,17 +28,31 @@
 
         public bool TryPlaceCluster(Cluster cluster, int row, int column)
         {
-            return _rows[row].TryPlaceCluster(cluster, column);
+            var isPlaced = _rows[row].TryPlaceCluster(cluster, column);
+            if (isPlaced)
+            {
+                _usedClusters[cluster] = new ClusterPosition(row, column);
+            }
+            return isPlaced;
         }
 
         public void RemoveCluster(Cluster cluster)
         {
-            foreach (var row in _rows)
+            if (_usedClusters.Remove(cluster, out var clusterPosition))
             {
-                if (row.RemoveCluster(cluster))
-                {
-                    break;
-                }
+                _rows[clusterPosition.Row].RemoveCluster(cluster, clusterPosition.Column);
+            }
+        }
+
+        private readonly struct ClusterPosition
+        {
+            public readonly int Row;
+            public readonly int Column;
+
+            public ClusterPosition(int row, int column)
+            {
+                Row = row;
+                Column = column;
             }
         }
     }

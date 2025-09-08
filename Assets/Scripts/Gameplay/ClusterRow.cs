@@ -28,6 +28,14 @@
                 return true;
             }
 
+            public void RemoveCluster(Cluster cluster, int startIndex)
+            {
+                for (var i = startIndex; i < startIndex + cluster.Length; i++)
+                {
+                    _cells[i] = null;
+                }
+            }
+
             public bool RemoveCluster(Cluster cluster)
             {
                 if (cluster == null) return false;
@@ -53,7 +61,8 @@
 
                 for (var i = 0; i < cluster.Length; i++)
                 {
-                    if (_cells[startIndex + i] != null)
+                    var cell = _cells[startIndex + i];
+                    if (cell != null && cell != cluster)
                         return false;
                 }
 

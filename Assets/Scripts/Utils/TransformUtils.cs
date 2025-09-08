@@ -32,5 +32,10 @@ namespace Utils
 
             return minIndex;
         }
+
+        public static bool IsPointInside(this RectTransform rectTransform, Vector2 point)
+        {
+            return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, point);
+        }
     }
 }

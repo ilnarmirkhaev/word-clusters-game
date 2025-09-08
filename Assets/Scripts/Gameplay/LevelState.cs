@@ -15,6 +15,15 @@ namespace Gameplay
         }
 
         public IReadOnlyList<Cluster> Clusters => _clusters;
-        public IPlayingField PlayingField => _playingField;
+
+        public bool TryPlaceCluster(Cluster cluster, int row, int column)
+        {
+            return _playingField.TryPlaceCluster(cluster, row, column);
+        }
+
+        public void ReturnCluster(Cluster cluster)
+        {
+            _playingField.RemoveCluster(cluster);
+        }
     }
 }

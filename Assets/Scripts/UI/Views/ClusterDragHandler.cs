@@ -10,6 +10,7 @@ namespace UI.Views
         [SerializeField] private ClusterView _fakeCluster;
         [SerializeField] private ScrollRect _clustersScroll;
         [SerializeField] private PlayingFieldView _playingField;
+        [SerializeField] private ClustersScrollView _clustersScrollView;
 
         private Cluster _cluster;
         private Vector2 _grabOffset;
@@ -42,10 +43,16 @@ namespace UI.Views
             var letterIndexUnderPointer = _fakeCluster.GetLetterIndexClosestToPoint(pointPosition);
 
             var changedPlace = false;
-            if (_playingField.TryPlaceClusterView(letterIndexUnderPointer, _cluster, pointPosition))
+            if (_playingField.TryPlaceClusterView(_cluster, pointPosition, letterIndexUnderPointer))
             {
                 newPosition = pointPosition - _grabOffset;
                 newParent = _playingField.PlacedClustersContainer;
+                changedPlace = true;
+            }
+            else if (_clustersScrollView.TryReturnCluster(_cluster, pointPosition))
+            {
+                newPosition = pointPosition;
+                newParent = _clustersScrollView.ClustersContainer;
                 changedPlace = true;
             }
             else

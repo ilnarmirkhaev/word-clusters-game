@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Gameplay;
 using UnityEngine;
+using Utils;
 using VContainer;
 
 namespace UI.Views
@@ -14,19 +15,14 @@ namespace UI.Views
 
         public Transform PlacedClustersContainer => _placedClustersContainer;
 
-        public bool TryPlaceClusterView(int letterIndexUnderPointer, Cluster cluster, Vector2 pointPosition)
+        public bool TryPlaceClusterView(Cluster cluster, Vector2 pointPosition, int letterIndexUnderPointer)
         {
-            if (!IsPointInsideOfRect(pointPosition)) return false;
+            if (!RectTransform.IsPointInside(pointPosition)) return false;
 
             var row = GetClosestRow(pointPosition);
             var column = _rows[row].GetChildIndexClosestToPoint(pointPosition) - letterIndexUnderPointer;
 
-            return _levelState.PlayingField.TryPlaceCluster(cluster, row, column);
-        }
-
-        private bool IsPointInsideOfRect(Vector2 pointPosition)
-        {
-            return RectTransformUtility.RectangleContainsScreenPoint(RectTransform, pointPosition);
+            return _levelState.TryPlaceCluster(cluster, row, column);
         }
 
         private int GetClosestRow(Vector2 point) => GetChildIndexClosestToPoint(point);
