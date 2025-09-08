@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UI.Views
 {
-    public class ClusterView : CachedMonoBehaviour
+    public class ClusterView : ObjectWithOrderedChildren
     {
         [SerializeField] private List<LetterCellView> _letterViews;
 
@@ -29,32 +29,9 @@ namespace UI.Views
             }
         }
 
-        public int GetLetterIndexClosestToPoint(Vector2 point)
-        {
-            var minIndex = 0;
-            var minDelta = DistanceToPoint(minIndex);
+        public int GetLetterIndexClosestToPoint(Vector2 point) => GetChildIndexClosestToPoint(point);
 
-            for (var i = 1; i < Cluster.Length; i++)
-            {
-                var distance = DistanceToPoint(i);
-                if (distance < minDelta)
-                {
-                    minIndex = i;
-                    minDelta = distance;
-                }
-                else // дистанция начинает расти, значит меньше уже не будет
-                {
-                    return minIndex;
-                }
-            }
-
-            return minIndex;
-
-            float DistanceToPoint(int letterIndex)
-            {
-                var view = _letterViews[letterIndex];
-                return Vector2.Distance(point, view.Transform.position);
-            }
-        }
+        protected override IReadOnlyList<CachedMonoBehaviour> OrderedChildren => _letterViews;
+        protected override int ActiveChildrenCount => Cluster.Length;
     }
 }

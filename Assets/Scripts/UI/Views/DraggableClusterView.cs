@@ -49,9 +49,10 @@ namespace UI.Views
         {
             if (!_isDragging) return;
 
-            if (_dragHandler.TryEndDrag(eventData, out var newPosition))
+            if (_dragHandler.TryEndDrag(eventData, out var newPosition, out var parent))
             {
                 Transform.position = newPosition;
+                Transform.SetParent(parent);
             }
             
             _isDragging = false;

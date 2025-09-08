@@ -10,7 +10,7 @@ namespace UI.Views
         [SerializeField] private ClusterView _clusterViewPrototype;
         [SerializeField] private RectTransform _clustersContainer;
 
-        [Inject] private LevelController _levelController;
+        [Inject] private LevelState _levelState;
         [Inject] private IObjectResolver _resolver;
 
         private void Start()
@@ -20,7 +20,7 @@ namespace UI.Views
 
         private void InstantiateClusters()
         {
-            foreach (var cluster in _levelController.GetClustersForLevel())
+            foreach (var cluster in _levelState.Clusters)
             {
                 var view = _resolver.Instantiate(_clusterViewPrototype, _clustersContainer);
                 view.Setup(cluster);

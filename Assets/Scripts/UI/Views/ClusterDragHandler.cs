@@ -9,6 +9,7 @@ namespace UI.Views
     {
         [SerializeField] private ClusterView _fakeCluster;
         [SerializeField] private ScrollRect _clustersScroll;
+        [SerializeField] private PlayingFieldView _playingField;
 
         private Cluster _cluster;
         private Vector2 _grabOffset;
@@ -32,15 +33,31 @@ namespace UI.Views
         public void Drag(PointerEventData eventData)
         {
             _fakeCluster.Transform.position = eventData.position - _grabOffset;
+            // _playingField.DisplayDrag();
         }
 
-        public bool TryEndDrag(PointerEventData eventData, out Vector2 newPosition)
+        public bool TryEndDrag(PointerEventData eventData, out Vector2 newPosition, out Transform newParent)
         {
-            var letterIndexUnderPointer = _fakeCluster.GetLetterIndexClosestToPoint(eventData.position);
+            var pointPosition = eventData.position;
+            var letterIndexUnderPointer = _fakeCluster.GetLetterIndexClosestToPoint(pointPosition);
+
+            var changedPlace = false;
+            if (_playingField.TryPlaceClusterView(letterIndexUnderPointer, _cluster, pointPosition))
+            {
+                newPosition = pointPosition - _grabOffset;
+                newParent = _playingField.PlacedClustersContainer;
+                changedPlace = true;
+            }
+            else
+            {
+                newPosition = default;
+                newParent = null;
+            }
+
             _fakeCluster.GameObject.SetActive(false);
-            newPosition = eventData.position;
             _clustersScroll.enabled = true;
-            return true;
+
+            return changedPlace;
         }
     }
 }

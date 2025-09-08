@@ -46,7 +46,7 @@
 
             private bool CanPlaceCluster(Cluster cluster, int startIndex)
             {
-                if (startIndex + cluster.Length > _rowLength)
+                if (startIndex < 0 || startIndex + cluster.Length > _rowLength)
                 {
                     return false;
                 }
