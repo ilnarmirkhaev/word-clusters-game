@@ -8,6 +8,7 @@ namespace Data
     public class LevelData
     {
         public readonly IReadOnlyList<Word> Words;
+        public readonly int WordLength;
 
         public LevelData(List<Word> words)
         {
@@ -18,6 +19,7 @@ namespace Data
             }
 
             Words = words;
+            WordLength = length;
         }
     }
 }

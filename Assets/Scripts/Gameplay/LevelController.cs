@@ -1,38 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Data;
-using VContainer.Unity;
+﻿using VContainer.Unity;
 
 namespace Gameplay
 {
     public class LevelController : IStartable
     {
-        private readonly LevelData _levelData;
         private readonly LevelState _levelState;
-        private readonly Random _random = new();
 
-        public LevelController(LevelDataProvider levelDataProvider)
+        public LevelController(LevelState levelState)
         {
-            _levelData = levelDataProvider.GetNextLevelData();
-            _levelState = CreateLevelState(_levelData);
+            _levelState = levelState;
         }
 
         public void Start()
         {
-        }
-
-        public IReadOnlyList<Cluster> GetClustersForLevel()
-        {
-            return _levelState.Clusters.OrderBy(_ => _random.Next()).ToArray();
-        }
-
-        private LevelState CreateLevelState(LevelData levelData)
-        {
-            var wordCount = levelData.Words.Count;
-            var wordLength = levelData.Words[0].Length;
-            var clusters = levelData.Words.SelectMany(word => word.Clusters).ToList();
-            return new LevelState(wordCount, wordLength, clusters);
         }
     }
 }

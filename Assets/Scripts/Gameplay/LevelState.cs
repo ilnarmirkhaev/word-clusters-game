@@ -5,15 +5,16 @@ namespace Gameplay
 {
     public class LevelState
     {
-        private readonly PlayingFieldState _playingFieldState;
+        private readonly IPlayingField _playingField;
         private readonly List<Cluster> _clusters;
 
-        public LevelState(int wordCount, int wordLength, List<string> clusters)
+        public LevelState(IPlayingField playingField, List<string> clusters)
         {
-            _playingFieldState = new PlayingFieldState(wordCount, wordLength);
+            _playingField = playingField;
             _clusters = clusters.Select(c => new Cluster(c)).ToList();
         }
 
         public IReadOnlyList<Cluster> Clusters => _clusters;
+        public IPlayingField PlayingField => _playingField;
     }
 }

@@ -10,6 +10,7 @@
             public ClusterRow(int rowLength)
             {
                 _rowLength = rowLength;
+                _cells = new Cluster[rowLength];
             }
 
             public Cluster this[int index] => _cells[index];
@@ -27,15 +28,20 @@
                 return true;
             }
 
-            public void RemoveCluster(Cluster cluster)
+            public bool RemoveCluster(Cluster cluster)
             {
+                if (cluster == null) return false;
+
+                var found = false;
                 for (var i = 0; i < _cells.Length; i++)
                 {
-                    if (_cells[i] == cluster)
-                    {
-                        _cells[i] = null;
-                    }
+                    if (_cells[i] != cluster) continue;
+
+                    _cells[i] = null;
+                    found = true;
                 }
+
+                return found;
             }
 
             private bool CanPlaceCluster(Cluster cluster, int startIndex)

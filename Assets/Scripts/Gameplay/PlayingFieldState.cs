@@ -1,6 +1,12 @@
 ﻿namespace Gameplay
 {
-    public partial class PlayingFieldState
+    public interface IPlayingField
+    {
+        bool TryPlaceCluster(Cluster cluster, int row, int column);
+        void RemoveCluster(Cluster cluster);
+    }
+    
+    public partial class PlayingFieldState : IPlayingField
     {
         private readonly ClusterRow[] _rows;
 
@@ -24,6 +30,13 @@
 
         public void RemoveCluster(Cluster cluster)
         {
+            foreach (var row in _rows)
+            {
+                if (row.RemoveCluster(cluster))
+                {
+                    break;
+                }
+            }
         }
     }
 }
