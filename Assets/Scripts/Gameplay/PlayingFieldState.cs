@@ -8,40 +8,73 @@ namespace Gameplay
         void RemoveCluster(Cluster cluster);
     }
 
-    public partial class PlayingFieldState : IPlayingField
+    public class PlayingFieldState : IPlayingField
     {
-        private readonly ClusterRow[] _rows;
+        private readonly int _wordLength;
+        private readonly int _wordCount;
+        private readonly Cluster[,] _field;
         private readonly Dictionary<Cluster, ClusterPosition> _usedClusters = new();
 
         public PlayingFieldState(int wordCount, int wordLength)
         {
-            _rows = new ClusterRow[wordCount];
-            for (var i = 0; i < wordCount; i++)
-            {
-                _rows[i] = new ClusterRow(wordLength);
-            }
+            _wordCount = wordCount;
+            _wordLength = wordLength;
+            _field = new Cluster[wordCount, wordLength];
         }
 
-        public Cluster this[int row, int column] => _rows[row][column];
+        public Cluster this[int row, int column] => _field[row, column];
 
-        public Cluster ClusterAt(int row, int column) => _rows[row][column];
+        public Cluster ClusterAt(int row, int column) => _field[row, column];
 
         public bool TryPlaceCluster(Cluster cluster, int row, int column)
         {
-            var isPlaced = _rows[row].TryPlaceCluster(cluster, column);
-            if (isPlaced)
-            {
-                _usedClusters[cluster] = new ClusterPosition(row, column);
-            }
-            return isPlaced;
+            if (row < 0 || row >= _wordCount) return false;
+
+            if (!CanPlaceCluster(cluster, row, column)) return false;
+
+            RemoveCluster(cluster);
+            PlaceCluster(cluster, row, column);
+            return true;
         }
 
         public void RemoveCluster(Cluster cluster)
         {
             if (_usedClusters.Remove(cluster, out var clusterPosition))
             {
-                _rows[clusterPosition.Row].RemoveCluster(cluster, clusterPosition.Column);
+                var row = clusterPosition.Row;
+                var column = clusterPosition.Column;
+                for (var i = column; i < column + cluster.Length; i++)
+                {
+                    _field[row, i] = null;
+                }
             }
+        }
+
+        private void PlaceCluster(Cluster cluster, int row, int column)
+        {
+            for (var i = 0; i < cluster.Length; i++)
+            {
+                _field[row, column + i] = cluster;
+            }
+
+            _usedClusters[cluster] = new ClusterPosition(row, column);
+        }
+
+        private bool CanPlaceCluster(Cluster cluster, int row, int column)
+        {
+            if (column < 0 || column + cluster.Length > _wordLength)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < cluster.Length; i++)
+            {
+                var cell = _field[row, column + i];
+                if (cell != null && cell != cluster)
+                    return false;
+            }
+
+            return true;
         }
 
         private readonly struct ClusterPosition
