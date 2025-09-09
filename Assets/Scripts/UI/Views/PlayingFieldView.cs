@@ -15,14 +15,27 @@ namespace UI.Views
 
         public Transform PlacedClustersContainer => _placedClustersContainer;
 
-        public bool TryPlaceClusterView(Cluster cluster, Vector2 pointPosition, int letterIndexUnderPointer)
+        public bool TryPlaceClusterView(Cluster cluster, Vector2 pointPosition, int clusterLetterIndex,
+            out Vector2 placedPosition)
         {
-            if (!RectTransform.IsPointInside(pointPosition)) return false;
+            if (!RectTransform.IsPointInside(pointPosition))
+            {
+                placedPosition = default;
+                return false;
+            }
 
             var row = GetClosestRow(pointPosition);
-            var column = _rows[row].GetChildIndexClosestToPoint(pointPosition) - letterIndexUnderPointer;
+            var pointedLetterIndex = _rows[row].GetChildIndexClosestToPoint(pointPosition);
+            var firstLetterIndex = pointedLetterIndex - clusterLetterIndex;
 
-            return _levelState.TryPlaceCluster(cluster, row, column);
+            if (_levelState.TryPlaceCluster(cluster, row, firstLetterIndex))
+            {
+                placedPosition = _rows[row].GetCentralizedPositionForLetters(firstLetterIndex, cluster.Length);
+                return true;
+            }
+
+            placedPosition = default;
+            return false;
         }
 
         private int GetClosestRow(Vector2 point) => GetChildIndexClosestToPoint(point);

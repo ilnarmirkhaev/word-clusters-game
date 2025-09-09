@@ -43,9 +43,9 @@ namespace UI.Views
             var letterIndexUnderPointer = _fakeCluster.GetLetterIndexClosestToPoint(pointPosition);
 
             var changedPlace = false;
-            if (_playingField.TryPlaceClusterView(_cluster, pointPosition, letterIndexUnderPointer))
+            if (_playingField.TryPlaceClusterView(_cluster, pointPosition, letterIndexUnderPointer, out var placedPosition))
             {
-                newPosition = pointPosition - _grabOffset;
+                newPosition = placedPosition;
                 newParent = _playingField.PlacedClustersContainer;
                 changedPlace = true;
             }
