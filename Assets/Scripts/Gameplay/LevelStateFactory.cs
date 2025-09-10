@@ -25,8 +25,12 @@ namespace Gameplay
             var wordLength = levelData.WordLength;
             var playingField = _playingFieldFactory.Create(wordCount, wordLength);
 
-            var clusters = levelData.Words.SelectMany(word => word.Clusters).OrderBy(_ => _random.Next()).ToList();
-            return new LevelState(playingField, clusters);
+            var clusters = levelData.Words.SelectMany(word => word.Clusters)
+                .Select(c => new Cluster(c))
+                .OrderBy(_ => _random.Next())
+                .ToList();
+
+            return new LevelState(playingField, levelData.Words, clusters);
         }
     }
 }
