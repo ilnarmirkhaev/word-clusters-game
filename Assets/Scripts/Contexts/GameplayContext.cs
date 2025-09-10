@@ -1,4 +1,5 @@
 ﻿using Gameplay;
+using UI;
 using UI.Views;
 using VContainer;
 using VContainer.Unity;
@@ -25,6 +26,7 @@ namespace Contexts
             }, Lifetime.Scoped);
 
             builder.RegisterComponentInHierarchy<ClusterDragHandler>();
+            builder.RegisterComponentInHierarchy<WinScreen>().AsImplementedInterfaces();
         }
     }
 }
